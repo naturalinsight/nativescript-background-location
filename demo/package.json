@@ -1,0 +1,25 @@
+{
+  "description": "NativeScript Application",
+  "license": "SEE LICENSE IN <your-license-filename>",
+  "readme": "NativeScript Application",
+  "repository": "<fill-your-repository-here>",
+  "nativescript": {
+    "id": "org.nativescript.demo",
+    "tns-android": {
+      "version": "3.1.1"
+    }
+  },
+  "dependencies": {
+    "nativescript-background-location": "file:///Users/nicolae.surdu/work/nativescript-background-location/src",
+    "nativescript-theme-core": "~1.0.2",
+    "tns-core-modules": "3.1.1"
+  },
+  "devDependencies": {
+    "babel-traverse": "6.25.0",
+    "babel-types": "6.25.0",
+    "babylon": "6.17.4",
+    "eslint": "^4.4.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "lazy": "1.0.11"
+  }
+}

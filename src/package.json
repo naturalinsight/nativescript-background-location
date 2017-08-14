@@ -1,0 +1,29 @@
+{
+  "name": "nativescript-background-location",
+  "version": "0.1.0",
+  "description": "NativeScript plugin to detect you location when app is in background.",
+  "repository": "https://github.com/naturalinsight/nativescript-background-location",
+  "main": "index",
+  "nativescript": {
+    "platforms": {
+      "android": "2.3.0",
+      "ios": "2.3.0"
+    }
+  },
+  "scripts": {
+    "link": "npm link && cd ../demo && npm link nativescript-background-location && cd ../src",
+    "clean": "rm -rf node_modules && npm i && cd ../demo && rm -rf hooks node_modules platforms && npm i && cd ../src && npm run link",
+    "android": "cd ../demo && tns run android --syncAllFiles",
+    "ios": "cd ../demo && tns run ios --syncAllFiles"
+  },
+  "license": "GPL",
+  "dependencies": {
+    "nativescript-android-utils": "^1.0.2",
+    "nativescript-permissions": "^1.2.3",
+    "nativescript-theme-core": "^1.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.4.0",
+    "eslint-plugin-promise": "^3.5.0"
+  }
+}
