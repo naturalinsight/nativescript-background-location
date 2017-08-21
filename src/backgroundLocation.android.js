@@ -6,24 +6,22 @@ const LocationServices = com.google.android.gms.location.LocationServices;
 const LocationRequest = com.google.android.gms.location.LocationRequest;
 const LocationResult = com.google.android.gms.location.LocationResult;
 
-const BackgroundLocationBase = require("./index.common");
+const BackgroundLocationBase = require("./backgroundLocation.common");
+const utils = require("./utils");
 
 var instance;
 
 class BackgroundLocation extends BackgroundLocationBase {
 	constructor() {
 		super();
-
-		this.config = {
-			interval: 5000,
-		};
 	}
 
-	static getInstance() {
+	static getInstance(config) {
 		if (!instance) {
 			instance = new BackgroundLocation();
 		}
 
+		instance.config = utils.extend({}, instance.defaultConfig, config || {});
 		return instance;
 	}
 
@@ -32,12 +30,33 @@ class BackgroundLocation extends BackgroundLocationBase {
 			const loc = LocationResult.extractResult(intent).getLastLocation();
 
 			return {
-				lat: loc.getLatitude(),
-				lon: loc.getLongitude()
+				latitude: loc.getLatitude(),
+				longitude: loc.getLongitude(),
+				altitude: loc.getAltitude(),
+				accuracy: {
+					horizontal: loc.getAccuracy(),
+					vertical: loc.getAccuracy()
+				},
+				speed: loc.getSpeed(),
+				direction: loc.getBearing(),
+				timestamp: new Date(loc.getTime()),
+				android: loc
 			};
 		}
 
 		return;
+	}
+
+	static hasPermission() {
+		return permissions.hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION);
+	}
+
+	static requestPermission(reason) {
+		if (!reason) {
+			reason = "Required to track your location in background";
+		}
+
+		return permissions.requestPermission(android.Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
 	connectToGooleAPI() {
@@ -67,8 +86,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 	}
 
 	start() {
-		const reason = "Required to track your location in background";
-		permissions.requestPermission(android.Manifest.permission.ACCESS_FINE_LOCATION, reason)
+		BackgroundLocation.requestPermission()
 			.then(function () {
 				this.connectToGooleAPI()
 					.then(function (api) {

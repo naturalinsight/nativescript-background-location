@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "NativeScript plugin to detect you location when app is in background.",
   "repository": "https://github.com/naturalinsight/nativescript-background-location",
-  "main": "index",
+  "main": "backgroundLocation",
   "nativescript": {
     "platforms": {
       "android": "2.3.0",
