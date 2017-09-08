@@ -1,7 +1,7 @@
 {
   "name": "nativescript-background-location",
   "version": "0.1.0",
-  "description": "NativeScript plugin to detect you location when app is in background.",
+  "description": "NativeScript plugin that enables tracking phone's location when app is in background.",
   "repository": "https://github.com/naturalinsight/nativescript-background-location",
   "main": "backgroundLocation",
   "nativescript": {

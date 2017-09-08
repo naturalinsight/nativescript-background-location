@@ -7,7 +7,6 @@ const LocationRequest = com.google.android.gms.location.LocationRequest;
 const LocationResult = com.google.android.gms.location.LocationResult;
 
 const BackgroundLocationBase = require("./backgroundLocation.common");
-const utils = require("./utils");
 
 var instance;
 
@@ -21,7 +20,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 			instance = new BackgroundLocation();
 		}
 
-		instance.config = utils.extend({}, instance.defaultConfig, config || {});
+		instance.setConfig(config);
 		return instance;
 	}
 
