@@ -1,5 +1,5 @@
 /* globals CLLocationManager, UIApplicationWillResignActiveNotification, UIApplicationDidBecomeActiveNotification
-           NSDate */
+           NSDate, kCLLocationAccuracyBest, CLActivityTypeAutomotiveNavigation */
 
 const app = require("application");
 
@@ -16,12 +16,13 @@ class BackgroundLocation extends BackgroundLocationBase {
 		this.inBackground = false;
 
 		this.locationManager = new CLLocationManager();
-		this.locationManager.desiredAccuracy = 3;
-		this.locationManager.allowsBackgroundLocationUpdates = true;
+		this.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 		this.locationManager.pausesLocationUpdatesAutomatically = false;
+		this.locationManager.allowsBackgroundLocationUpdates = true;
+		this.locationManager.requestAlwaysAuthorization();
 
-		app.ios.addNotificationObserver(UIApplicationWillResignActiveNotification, this.appEnteredBackground);
-		app.ios.addNotificationObserver(UIApplicationDidBecomeActiveNotification, this.appEnteredForeground);
+		app.ios.addNotificationObserver(UIApplicationWillResignActiveNotification, this.appEnteredBackground.bind(this));
+		app.ios.addNotificationObserver(UIApplicationDidBecomeActiveNotification, this.appEnteredForeground.bind(this));
 	}
 
 	static getInstance(config) {
@@ -72,15 +73,28 @@ class BackgroundLocation extends BackgroundLocationBase {
 	}
 
 	requestLocation() {
+		console.log("REQ !!!");
 		this.locationManager.requestLocation();
 	}
 
 	appEnteredBackground() {
 		this.inBackground = true;
+		this.locationManager.pausesLocationUpdatesAutomatically = false;
+
+		if (this.running) {
+			this.stop();
+			this.start();
+		}
 	}
 
 	appEnteredForeground() {
 		this.inBackground = false;
+		this.locationManager.pausesLocationUpdatesAutomatically = true;
+
+		if (this.running) {
+			this.stop();
+			this.start();
+		}
 	}
 }
 
