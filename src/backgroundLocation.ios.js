@@ -1,5 +1,5 @@
 /* globals CLLocationManager, UIApplicationWillResignActiveNotification, UIApplicationDidBecomeActiveNotification
-           NSDate, kCLLocationAccuracyBest, CLActivityTypeAutomotiveNavigation */
+           NSDate, kCLLocationAccuracyBest, kCLDistanceFilterNone */
 
 const app = require("application");
 
@@ -17,8 +17,10 @@ class BackgroundLocation extends BackgroundLocationBase {
 
 		this.locationManager = new CLLocationManager();
 		this.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-		this.locationManager.pausesLocationUpdatesAutomatically = false;
+		this.locationManager.distanceFilter = kCLDistanceFilterNone;
 		this.locationManager.allowsBackgroundLocationUpdates = true;
+
+		//TODO: move this to requestPermission
 		this.locationManager.requestAlwaysAuthorization();
 
 		app.ios.addNotificationObserver(UIApplicationWillResignActiveNotification, this.appEnteredBackground.bind(this));
@@ -63,6 +65,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 	}
 
 	start() {
+		console.log("LOC START");
 		this.running = true;
 		this.locationManager.startUpdatingLocation();
 	}
