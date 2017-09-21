@@ -72,8 +72,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 		this.locationManager.stopUpdatingLocation();
 	}
 
-	requestLocation() {
-		console.log("REQ !!!");
+	getLocation() {
 		this.locationManager.requestLocation();
 	}
 

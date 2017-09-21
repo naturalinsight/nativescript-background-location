@@ -5,6 +5,7 @@ const GoogleApiClient = com.google.android.gms.common.api.GoogleApiClient;
 const LocationServices = com.google.android.gms.location.LocationServices;
 const LocationRequest = com.google.android.gms.location.LocationRequest;
 const LocationResult = com.google.android.gms.location.LocationResult;
+const PendingIntent = android.app.PendingIntent;
 
 const BackgroundLocationBase = require("./backgroundLocation.common");
 
@@ -24,23 +25,27 @@ class BackgroundLocation extends BackgroundLocationBase {
 		return instance;
 	}
 
+	static convertLocation(androidLocation) {
+		return {
+			latitude: androidLocation.getLatitude(),
+			longitude: androidLocation.getLongitude(),
+			altitude: androidLocation.getAltitude(),
+			accuracy: {
+				horizontal: androidLocation.getAccuracy(),
+				vertical: androidLocation.getAccuracy()
+			},
+			speed: androidLocation.getSpeed(),
+			direction: androidLocation.getBearing(),
+			timestamp: new Date(androidLocation.getTime()),
+			android: androidLocation
+		};
+	}
+
 	static extractLocation(intent) {
 		if (LocationResult.hasResult(intent)) {
 			const loc = LocationResult.extractResult(intent).getLastLocation();
 
-			return {
-				latitude: loc.getLatitude(),
-				longitude: loc.getLongitude(),
-				altitude: loc.getAltitude(),
-				accuracy: {
-					horizontal: loc.getAccuracy(),
-					vertical: loc.getAccuracy()
-				},
-				speed: loc.getSpeed(),
-				direction: loc.getBearing(),
-				timestamp: new Date(loc.getTime()),
-				android: loc
-			};
+			return BackgroundLocation.convertLocation(loc);
 		}
 
 		return;
@@ -81,7 +86,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 	setHandler(classRef) {
 		var context = application.android.context;
 		var intent = new android.content.Intent(context, classRef.class);
-		this.intent = android.app.PendingIntent.getService(context, 0, intent, android.app.PendingIntent.FLAG_UPDATE_CURRENT);
+		this.intent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 	start() {
@@ -115,6 +120,18 @@ class BackgroundLocation extends BackgroundLocationBase {
 		.catch(function (err) {
 			console.error(err.stack);
 		});
+	}
+
+	getLocation() {
+		return BackgroundLocation.requestPermission()
+		.then(function () {
+			return this.connectToGooleAPI()
+			.then(function (api) {
+				const loc = LocationServices.FusedLocationApi.getLastLocation(api);
+				return BackgroundLocation.convertLocation(loc);
+			});
+		}.bind(this));
+
 	}
 }
 
