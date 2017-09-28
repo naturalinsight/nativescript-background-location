@@ -1,10 +1,22 @@
 const {extend} = require("./utils");
+const {TIME} = require("./const");
+
+const ACCURACY = {
+	HIGH: 3,
+	MEDIUM: 100,
+	LOW: 1000
+};
 
 class BackgroundLocationBase {
 	constructor() {
 		this.defaultConfig = {
-			interval: 5000,
-			distanceFilter: 0 //TODO: implement me
+			desiredAccuracy: ACCURACY.LOW,
+			updateDistance: 0,
+
+			//Android
+			updateInterval: 5 * TIME.SECONDS,
+			fasterUpdates: true,
+			slowerUpdates: false
 		};
 	}
 
@@ -12,5 +24,7 @@ class BackgroundLocationBase {
 		this.config = extend({}, this.defaultConfig, config || {});
 	}
 }
+
+BackgroundLocationBase.ACCURACY = ACCURACY;
 
 module.exports = BackgroundLocationBase;
