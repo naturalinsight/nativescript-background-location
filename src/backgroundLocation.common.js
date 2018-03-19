@@ -1,4 +1,4 @@
-const {extend} = require("./utils");
+const utils = require("./utils");
 const {TIME} = require("./const");
 
 const ACCURACY = {
@@ -21,7 +21,7 @@ class BackgroundLocationBase {
 	}
 
 	setConfig(config) {
-		this.config = extend({}, this.defaultConfig, config || {});
+		this.config = utils.extend({}, this.defaultConfig, config || {});
 	}
 }
 

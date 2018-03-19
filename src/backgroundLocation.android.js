@@ -8,7 +8,7 @@ const LocationResult = com.google.android.gms.location.LocationResult;
 const PendingIntent = android.app.PendingIntent;
 
 const BackgroundLocationBase = require("./backgroundLocation.common");
-const ACCURACY = BackgroundLocationBase.ACCURACY;
+const {ACCURACY} = BackgroundLocationBase;
 
 var instance;
 
