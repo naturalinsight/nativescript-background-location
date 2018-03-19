@@ -1,5 +1,5 @@
 /* globals CLLocationManager, UIApplicationWillResignActiveNotification, UIApplicationDidBecomeActiveNotification
-           NSDate, kCLLocationAccuracyBest, kCLDistanceFilterNone, kCLLocationAccuracyNearestTenMeters,
+           NSDate, kCLLocationAccuracyBest, kCLDistanceFilterNone, kCLLocationAccuracyHundredMeters,
            kCLLocationAccuracyKilometer */
 
 const app = require("application");
@@ -74,7 +74,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 			this.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 		}
 		else if (this.config.desiredAccuracy <= ACCURACY.MEDIUM) {
-			this.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+			this.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
 		}
 		else {
 			this.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
