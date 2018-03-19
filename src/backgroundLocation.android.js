@@ -103,7 +103,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 							locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 						}
 						else {
-							locationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
+							locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 						}
 
 						locationRequest.setInterval(this.config.interval);
