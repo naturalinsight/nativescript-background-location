@@ -1,10 +1,13 @@
 /* globals CLLocationManager, UIApplicationWillResignActiveNotification, UIApplicationDidBecomeActiveNotification
-           NSDate, kCLLocationAccuracyBest, kCLDistanceFilterNone */
+           NSDate, kCLLocationAccuracyBest, kCLDistanceFilterNone, kCLLocationAccuracyHundredMeters,
+           kCLLocationAccuracyKilometer */
 
 const app = require("application");
 
+const utils = require("./utils");
 const BackgroundLocationBase = require("./backgroundLocation.common");
-const {extend} = require("./utils");
+
+const {ACCURACY} = BackgroundLocationBase;
 
 var instance;
 
@@ -16,7 +19,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 		this.inBackground = false;
 
 		this.locationManager = new CLLocationManager();
-		this.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+
 		this.locationManager.distanceFilter = kCLDistanceFilterNone;
 		this.locationManager.allowsBackgroundLocationUpdates = true;
 
@@ -32,7 +35,7 @@ class BackgroundLocation extends BackgroundLocationBase {
 			instance = new BackgroundLocation();
 		}
 
-		instance.config = extend({}, instance.defaultConfig, config || {});
+		instance.config = utils.extend({}, instance.defaultConfig, config || {});
 		return instance;
 	}
 
@@ -65,8 +68,18 @@ class BackgroundLocation extends BackgroundLocationBase {
 	}
 
 	start() {
-		console.log("LOC START");
 		this.running = true;
+
+		if (this.config.desiredAccuracy <= ACCURACY.HIGH) {
+			this.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+		}
+		else if (this.config.desiredAccuracy <= ACCURACY.MEDIUM) {
+			this.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+		}
+		else {
+			this.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+		}
+
 		this.locationManager.startUpdatingLocation();
 	}
 

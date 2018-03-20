@@ -8,6 +8,7 @@ const LocationResult = com.google.android.gms.location.LocationResult;
 const PendingIntent = android.app.PendingIntent;
 
 const BackgroundLocationBase = require("./backgroundLocation.common");
+const {ACCURACY} = BackgroundLocationBase;
 
 var instance;
 
@@ -95,9 +96,27 @@ class BackgroundLocation extends BackgroundLocationBase {
 				this.connectToGooleAPI()
 					.then(function (api) {
 						const locationRequest = new LocationRequest();
-						locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-						locationRequest.setFastestInterval(this.config.interval);
+						if (this.config.desiredAccuracy <= ACCURACY.HIGH) {
+							locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+						}
+						else if (this.config.desiredAccuracy <= ACCURACY.MEDIUM) {
+							locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+						}
+						else {
+							locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+						}
+
 						locationRequest.setInterval(this.config.interval);
+
+						if (!this.config.fasterUpdates) {
+							locationRequest.setFastestInterval(this.config.interval);
+						}
+
+						if (this.config.slowerUpdates) {
+							locationRequest.setMaxWaitTime(this.config.interval * 2);
+						}
+
+						locationRequest.setSmallestDisplacement(this.config.updateDistance);
 
 						LocationServices.FusedLocationApi.requestLocationUpdates(api, locationRequest, this.intent);
 						api.disconnect();
